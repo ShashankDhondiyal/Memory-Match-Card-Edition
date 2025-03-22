@@ -1,10 +1,16 @@
 package com.game;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 
-public class PrimaryController {
+public class Logic {
 
     @FXML private ImageView[] gameGridCards;
     @FXML private ImageView card1;
@@ -30,19 +36,39 @@ public class PrimaryController {
         
         gameGridCards = new ImageView[] {card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11, card12, card13, card14, card15, card16};
 
-        for (int i = 0; i < 16; i++) {
-            gameGridCards[i].setImage(deck.getCard(53));
+        // start pulling cards from deck
+        ArrayList<Integer> cardsPickedFromDeck = new ArrayList<>();
+        Random random = new Random();
+
+        for (int i = 0; i < 8; i++){
+           int card = random.nextInt(52) + 1;
+                while (cardsPickedFromDeck.contains(card)){
+                    card = random.nextInt(52) + 1;
+                }
+           cardsPickedFromDeck.add(card);
+           cardsPickedFromDeck.add(card);
+        }
+        Collections.shuffle(cardsPickedFromDeck);
+        Collections.shuffle(cardsPickedFromDeck);
+
+        for (int i = 0; i < 16; i++){
+            gameGridCards[i].setImage(deck.getCard(cardsPickedFromDeck.get(i)));
         }
 
-        // maybe make other java for making the game display other cards
-
+        PauseTransition pause = new PauseTransition(Duration.seconds(4));
+        pause.setOnFinished(event -> {
+            for (int i = 0; i < 16; i++){
+                gameGridCards[i].setImage(deck.getCard(53));
+            }
+        });
+        pause.play();
     }
 
     @FXML
     public void handleClick(MouseEvent event) {
         Object source = event.getSource();
 
-        if (source instanceof ImageView) {
+        if (source instanceof ImageView){
             ImageView clickedImageView = (ImageView) source;
             
             String imageViewId = clickedImageView.getId();

@@ -8,7 +8,7 @@ public final class DeckOfCards {
 
     private HashMap<Integer, Image> Deck;
 
-    public DeckOfCards() {
+    public DeckOfCards(){
         Deck = new HashMap<>();
         Deck.put(1, new Image(getClass().getResourceAsStream("/images/2_of_clubs.png")));        Deck.put(14, new Image(getClass().getResourceAsStream("/images/2_of_diamonds.png")));
         Deck.put(2, new Image(getClass().getResourceAsStream("/images/3_of_clubs.png")));        Deck.put(15, new Image(getClass().getResourceAsStream("/images/3_of_diamonds.png")));
@@ -41,7 +41,7 @@ public final class DeckOfCards {
         Deck.put(53, new Image(getClass().getResourceAsStream("/images/cover.png")));
     }
 
-    public Image getCard(int n) {
+    public Image getCard(int n){
         return Deck.get(n);
     }
 }
