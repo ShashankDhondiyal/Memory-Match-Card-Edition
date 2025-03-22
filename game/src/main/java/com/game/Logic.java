@@ -30,14 +30,20 @@ public class Logic {
     @FXML private ImageView card15;
     @FXML private ImageView card16;
 
+    private DeckOfCards deck;
+    private ArrayList<Integer> cardsPickedFromDeck;
+    private ImageView firstCard;
+    private ImageView secondCard;
+    private boolean isChecking = false;
+
     @FXML
     private void startGame() {
-        DeckOfCards deck = new DeckOfCards();
+        deck = new DeckOfCards();
         
         gameGridCards = new ImageView[] {card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11, card12, card13, card14, card15, card16};
 
         // start pulling cards from deck
-        ArrayList<Integer> cardsPickedFromDeck = new ArrayList<>();
+        cardsPickedFromDeck = new ArrayList<>();
         Random random = new Random();
 
         for (int i = 0; i < 8; i++){
@@ -55,7 +61,7 @@ public class Logic {
             gameGridCards[i].setImage(deck.getCard(cardsPickedFromDeck.get(i)));
         }
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(4));
+        PauseTransition pause = new PauseTransition(Duration.seconds(3));
         pause.setOnFinished(event -> {
             for (int i = 0; i < 16; i++){
                 gameGridCards[i].setImage(deck.getCard(53));
@@ -66,63 +72,46 @@ public class Logic {
 
     @FXML
     public void handleClick(MouseEvent event) {
-        Object source = event.getSource();
-
-        if (source instanceof ImageView){
-            ImageView clickedImageView = (ImageView) source;
-            
-            String imageViewId = clickedImageView.getId();
-            
-            switch (imageViewId){
-                case "card1":
-                    // add logic 
-                    break;
-                case "card2":
-                    // add logic 
-                    break;
-                case "card3":
-                    // add logic 
-                    break;
-                case "card4":
-                    // add logic 
-                    break;
-                case "card5":
-                    // add logic 
-                    break;
-                case "card6":
-                    // add logic 
-                    break;
-                case "card7":
-                    // add logic 
-                    break;
-                case "card8":
-                    // add logic 
-                    break;
-                case "card9":
-                    // add logic 
-                    break;
-                case "card10":
-                    // add logic 
-                    break;
-                case "card11":
-                    // add logic 
-                    break;
-                case "card12":
-                    // add logic 
-                    break;
-                case "card13":
-                    // add logic 
-                    break;
-                case "card14":
-                    // add logic 
-                    break;
-                case "card15":
-                    // add logic 
-                    break;
-                case "card16":
-                    // add logic 
-                    break;
-            }           
+        if (isChecking) {
+            return;
         }
+
+        ImageView clickedImageView = (ImageView) event.getSource();
+        int index = getIndex(clickedImageView);
+
+        if (firstCard == null) {
+            firstCard = clickedImageView;
+            firstCard.setImage(deck.getCard(cardsPickedFromDeck.get(index)));
+        } else if (secondCard == null && clickedImageView != firstCard) {
+            secondCard = clickedImageView;
+            secondCard.setImage(deck.getCard(cardsPickedFromDeck.get(index)));
+
+            isChecking = true;
+
+            checkMatch();
+        }
+    }
+
+    private void checkMatch() {
+        int firstIndex = getIndex(firstCard);
+        int secondIndex = getIndex(secondCard);
+
+        if (!cardsPickedFromDeck.get(firstIndex).equals(cardsPickedFromDeck.get(secondIndex))) {
+            firstCard.setImage(deck.getCard(53));
+            secondCard.setImage(deck.getCard(53));
+        }
+
+        firstCard = null;
+        secondCard = null;
+        isChecking = false;
+    }
+
+    private int getIndex(ImageView imageView) {
+        for (int i = 0; i < gameGridCards.length; i++) {
+            if (gameGridCards[i] == imageView) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
