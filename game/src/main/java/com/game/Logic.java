@@ -88,7 +88,9 @@ public class Logic {
 
             isChecking = true;
 
-            checkMatch();
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+            pause.setOnFinished(e -> checkMatch());
+            pause.play();
         }
     }
 
